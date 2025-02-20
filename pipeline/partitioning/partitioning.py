@@ -2,7 +2,7 @@
 import json
 from datetime import datetime
 
-from pipeline.partitioning.Metadata import ImageMetadata, TableMetadata
+from pipeline.partitioning.metadata import ImageMetadata, TableMetadata
 from pipeline.partitioning.element import Element, Metadata
 
 

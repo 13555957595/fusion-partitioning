@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 from typing import List, Optional
 
-from pipeline.partitioning.Metadata import Metadata
+from pipeline.partitioning.metadata import Metadata
 
 
 # 定义 Element 类，为所有属性设置默认值
