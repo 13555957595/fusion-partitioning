@@ -1,4 +1,8 @@
-# PDF-Processor
+# PDF文件处理
+
+pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple --extra-index-url https://wheels.myhloli.com --extra-index-url https://download.pytorch.org/whl/cu118
+
+
 
 ### 系通过以下命令安装magic-pdf组件###
 

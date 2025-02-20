@@ -8,7 +8,6 @@ from magic_pdf.config.enums import SupportedPdfParseMethod
 from s3 import minio_client
 
 def before_partitioning(file_name:str):
-    os.environ['MINERU_TOOLS_CONFIG_JSON'] = 'E:\devops\code\gitee\fusion\fusion-document-partition\magic-pdf.json'
     # 以这个文件名字创建一个根目录
     os.makedirs(f"../.cache/{file_name}/images/", exist_ok=True)
     local_md_dir = f"../.cache/{file_name}"
@@ -18,6 +17,8 @@ def before_partitioning(file_name:str):
     return[local_md_dir, local_images_dir]
 
 def on_partitioning(file_name:str, local_md_dir:str, local_images_dir:str):
+    os.environ['MINERU_TOOLS_CONFIG_JSON'] = './magic-pdf.json'
+
     image_writer, md_writer = FileBasedDataWriter(f"../.cache/{file_name}/images"), FileBasedDataWriter(
         f"../.cache/{file_name}")
     # read bytes
@@ -68,4 +69,4 @@ def do(file_name:str) :
 
 
 if __name__ == "__main__":
-    on_partitioning("456.pdf","../.cache/456.pdf/" , "../.cache/456.pdf/images/")
+    on_partitioning("789.pdf","../.cache/789.pdf/" , "../.cache/456.pdf/images/")

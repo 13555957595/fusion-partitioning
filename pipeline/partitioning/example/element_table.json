@@ -1,0 +1,27 @@
+{
+    "type": "Table",
+    "element_id": "5713c0e90194ac7f0f2c60dd614bd24d",
+    "text": "The table consists of 6 rows and 7 columns. The columns represent
+        inhibitor concentration (g), bc (V/dec), ba (V/dec), Ecorr (V), icorr
+        (A/cm\u00b2), polarization resistance (\u03a9), and corrosion rate
+        (mm/year). As the inhibitor concentration increases, the corrosion
+        rate generally decreases, indicating the effectiveness of the
+        inhibitor. Notably, the polarization resistance increases with higher
+        inhibitor concentrations, peaking at 6 grams before slightly
+        decreasing. This suggests that the inhibitor is most effective at
+        6 grams, significantly reducing the corrosion rate and increasing
+        polarization resistance. The data provides valuable insights into the
+        optimal concentration of the inhibitor for corrosion prevention.",
+    "metadata": {
+        "text_as_html": "<table>...<full results omitted for brevity>...</table>",
+        "filetype": "application/pdf",
+        "languages": [
+            "eng"
+        ],
+        "page_number": 1,
+        "image_base64": "/9j...<full results omitted for brevity>...//Z",
+        "image_mime_type": "image/jpeg",
+        "filename": "7f239e1d4ef3556cc867a4bd321bbc41.pdf",
+        "data_source": {}
+    }
+}

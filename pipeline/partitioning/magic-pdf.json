@@ -11,8 +11,8 @@
             "endpoint"
         ]
     },
-    "models-dir": "E:\\devops\\code\\gitee\\fusion\\fusion-document-partition\\huggingface\\hub\\models--opendatalab--PDF-Extract-Kit-1.0\\snapshots\\fcf59ee2de3dad2dc35fbeeb0e35779f288cee9c/models",
-    "layoutreader-model-dir": "E:\\devops\\code\\gitee\\fusion\\fusion-document-partition\\huggingface\\hub\\models--hantian--layoutreader\\snapshots\\641226775a0878b1014a96ad01b9642915136853",
+    "models-dir": "E:\\devops\\code\\gitee\\fusion\\fusion-unstructure-processing\\models\\huggingface\\hub\\models--opendatalab--PDF-Extract-Kit-1.0\\snapshots\\fcf59ee2de3dad2dc35fbeeb0e35779f288cee9c/models",
+    "layoutreader-model-dir": "E:\\devops\\code\\gitee\\fusion\\fusion-unstructure-processing\\models\\huggingface\\hub\\models--hantian--layoutreader\\snapshots\\641226775a0878b1014a96ad01b9642915136853",
     "device-mode": "cuda",
     "layout-config": {
         "model": "doclayout_yolo"

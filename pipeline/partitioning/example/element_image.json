@@ -1,0 +1,23 @@
+{
+    "type": "Image",
+    "element_id": "3303aa13098f5a26b9845bd18ee8c881",
+    "text": "{\n  \"type\": \"graph\",\n  \"description\": \"The graph shows
+        the relationship between Potential (V) and Current Density (A/cm2).
+        The x-axis is labeled 'Current Density (A/cm2)' and ranges from
+        0.0000001 to 0.1. The y-axis is labeled 'Potential (V)' and ranges
+        from -2.5 to 1.5. There are six different data series represented
+        by different colors: blue (10g), red (4g), green (6g), purple (2g),
+        orange (Control), and light blue (8g). The data points for each series
+        show how the potential changes with varying current density.\"\n}",
+    "metadata": {
+        "filetype": "application/pdf",
+        "languages": [
+            "eng"
+        ],
+        "page_number": 1,
+        "image_base64": "/9j...<full results omitted for brevity>...Q==",
+        "image_mime_type": "image/jpeg",
+        "filename": "7f239e1d4ef3556cc867a4bd321bbc41.pdf",
+        "data_source": {}
+    }
+}
