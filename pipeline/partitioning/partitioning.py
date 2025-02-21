@@ -6,9 +6,9 @@ from pipeline.partitioning.metadata import ImageMetadata, TableMetadata
 from pipeline.partitioning.element import Element, Metadata
 
 
-def do():
+def do(input_content_jsonfile:str , output_partition_jsonfile:str) -> None:
     elements = []
-    with open('../.cache/456.pdf/_content_list.json', 'r', encoding='utf-8') as file:
+    with open(input_content_jsonfile, 'r', encoding='utf-8') as file:
         data = json.load(file)
         parent_id = ''
         for item in data:
@@ -46,8 +46,8 @@ def do():
             ################################################
             print(element.to_json())
             elements.append(element.to_json())
-    with open('./output/partition_output.json', 'w', encoding='utf-8') as json_file:
+    with open(output_partition_jsonfile, 'w', encoding='utf-8') as json_file:
         json.dump(elements, json_file, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
-    do()
+    do('../.cache/321.pdf/_content_list.json' , '../.cache/321.pdf/_partition.json')
