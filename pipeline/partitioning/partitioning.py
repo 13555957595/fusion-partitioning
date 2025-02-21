@@ -7,8 +7,8 @@ from pipeline.partitioning.element import Element, Metadata
 
 
 def do():
-    params_list = []
-    with open('../.cache/789.pdf/_content_list.json', 'r', encoding='utf-8') as file:
+    elements = []
+    with open('../.cache/456.pdf/_content_list.json', 'r', encoding='utf-8') as file:
         data = json.load(file)
         parent_id = ''
         for item in data:
@@ -43,8 +43,11 @@ def do():
             element.metadata.file_directory = "N/A"
             element.metadata.filename = "N/A"
             element.metadata.filetype = element.type
+            ################################################
             print(element.to_json())
-
+            elements.append(element.to_json())
+    with open('./output/partition_output.json', 'w', encoding='utf-8') as json_file:
+        json.dump(elements, json_file, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
     do()

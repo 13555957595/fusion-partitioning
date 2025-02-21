@@ -69,4 +69,4 @@ def do(file_name:str) :
 
 
 if __name__ == "__main__":
-    on_partitioning("789.pdf","../.cache/789.pdf/" , "../.cache/456.pdf/images/")
+    on_partitioning("321.pdf","../.cache/321.pdf/" , "../.cache/321.pdf/images/")

@@ -13,6 +13,9 @@ class Metadata:
     filename: Optional[str] = None
     filetype: Optional[str] = None
 
+    def to_json(self):
+        # 返回基类的属性
+        return self.__dict__
 
 
 # 子类继承 Metadata

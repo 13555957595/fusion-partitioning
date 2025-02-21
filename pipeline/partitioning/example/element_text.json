@@ -1,14 +1,16 @@
 {
-    "type": "NarrativeText",
-    "element_id": "5ef1d1117721f0472c1ad825991d7d37",
-    "text": "The Unstructured documentation covers the following services:",
+    "type": "text",
+    "element_id": "df0e9b2bb2804a60b6426e03d1",
+    "text": "HALEON ",
     "metadata": {
-        "last_modified": "2024-05-01T14:15:22",
-        "page_number": 1,
-        "languages": ["eng"],
-        "parent_id": "56f24319ae258b735cac3ec2a271b1d9",
-        "file_directory": "/content",
-        "filename": "Unstructured documentation.html",
-        "filetype": "text/html"
+        "last_modified": "2025-02-21T11:50:47",
+        "page_number": 0,
+        "languages": [
+            "eng"
+        ],
+        "parent_id": "df0e9b2bb2804a60b6426e03d1",
+        "file_directory": "N/A",
+        "filename": "N/A",
+        "filetype": "text"
     }
 }
