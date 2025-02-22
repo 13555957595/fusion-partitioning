@@ -41,7 +41,6 @@ def upload_folder_to_minio(target_file_name:str):
                 continue
             relative_file_path = local_file_path.replace(local_folder_path,"")
             relative_file_path = relative_file_path.replace("\\", "/")
-            print(f"relative_file_path={relative_file_path}")
             object_name = f"{target_file_name}/partition{relative_file_path}"
             print(f"object_name={object_name}")
             try:
@@ -50,6 +49,22 @@ def upload_folder_to_minio(target_file_name:str):
                 print(f"已上传: {local_file_path} -> {bucket_name}/{object_name}")
             except S3Error as e:
                 print(f"上传文件 {local_file_path} 时出错: {e}")
+
+def upload_partition_json_file_to_minio(file_name:str):
+    local_md_folder = get_document_directory(file_name)
+    _partition_json_file = os.path.join(local_md_folder, "_partition.json")
+    if not os.path.exists(_partition_json_file):
+        print(f"文件 {_partition_json_file} 不存在")
+        return
+    object_name = f"{file_name}/partition/_partition.json"
+    print(f"object_name={object_name}")
+    try:
+        # 上传文件
+        client.fput_object(bucket_name, object_name, _partition_json_file)
+        print(f"已上传: {_partition_json_file} -> {bucket_name}/{object_name}")
+    except S3Error as e:
+        print(f"上传文件 {_partition_json_file} 时出错: {e}")
+
 
 
 if __name__ == "__main__":

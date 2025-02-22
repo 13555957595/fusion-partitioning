@@ -1,12 +1,23 @@
 # 创建多个 NarrativeTextParams 实例
 import json
+import os
 from datetime import datetime
 
 from pipeline.partitioning.metadata import ImageMetadata, TableMetadata
 from pipeline.partitioning.element import Element, Metadata
+from s3.minio_client import upload_partition_json_file_to_minio
+from utils.directory_utils import get_project_root, get_document_directory
 
 
-def do(input_content_jsonfile:str , output_partition_jsonfile:str) -> None:
+def do(file_name:str) -> None:
+    local_md_folder = get_document_directory(file_name)
+    input_content_jsonfile = os.path.join(local_md_folder, "_content_list.json")
+    if not os.path.exists(input_content_jsonfile):
+        print(f"文件 {input_content_jsonfile} 不存在")
+        return
+    output_partition_jsonfile = os.path.join(local_md_folder, "_partition.json")
+    with open(output_partition_jsonfile, "w") as file:
+        pass  # 不需要写入内容
     elements = []
     with open(input_content_jsonfile, 'r', encoding='utf-8') as file:
         data = json.load(file)
@@ -49,5 +60,7 @@ def do(input_content_jsonfile:str , output_partition_jsonfile:str) -> None:
     with open(output_partition_jsonfile, 'w', encoding='utf-8') as json_file:
         json.dump(elements, json_file, ensure_ascii=False, indent=4)
 
+    upload_partition_json_file_to_minio(file_name)
+
 if __name__ == "__main__":
-    do('../.cache/321.pdf/_content_list.json' , '../.cache/321.pdf/_partition.json')
+    do('phonix.pdf' )
