@@ -25,6 +25,8 @@ class ImageMetadata(Metadata):
         image_path: Optional[str] = None,
         image_base64: Optional[str] = None,  # 新增属性
         image_mime_type: Optional[str] = None,  # 新增属性
+        image_caption: Optional[str] = None,
+        image_footnote: Optional[str] = None,
         **kwargs  # 用于接收父类的属性
     ):
         # 调用父类的初始化方法（如果有）
@@ -33,6 +35,8 @@ class ImageMetadata(Metadata):
         self.image_path = image_path
         self.image_base64 = image_base64
         self.image_mime_type = image_mime_type
+        self.image_caption = image_caption
+        self.image_footnote = image_footnote
         # 设置父类的属性
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -50,6 +54,8 @@ class TableMetadata(Metadata):
         text_as_html:Optional[str] = None,
         image_base64: Optional[str] = None,  # 新增属性
         image_mime_type: Optional[str] = None,  # 新增属性
+        table_caption: Optional[str] = None,
+        table_footnote: Optional[str] = None,
         **kwargs  # 用于接收父类的属性
     ):
         # 调用父类的初始化方法（如果有）
@@ -59,6 +65,8 @@ class TableMetadata(Metadata):
         self.text_as_html = text_as_html
         self.image_base64 = image_base64
         self.image_mime_type = image_mime_type
+        self.table_caption = table_caption
+        self.table_footnote = table_footnote
         # 设置父类的属性
         for key, value in kwargs.items():
             setattr(self, key, value)

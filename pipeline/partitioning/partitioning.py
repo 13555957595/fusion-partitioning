@@ -37,23 +37,32 @@ def do(file_name:str) -> None:
                 element.text = item.get('text', 'N/A')
             if item.get('type', 'N/A') == 'image':
                 element.metadata = ImageMetadata(element.metadata);
-                element.metadata.image_path=item.get('img_path', 'N/A')
+                index = item.get('img_path', 'N/A').find("images")
+                image_path = item.get('img_path', 'N/A')[index:]
+                element.metadata.image_path=image_path
                 element.metadata.image_base64=''
                 element.metadata.image_mime_type='image/jpeg'
+                element.metadata.image_caption=item.get('img_caption', 'N/A')
+                element.metadata.image_footnote = item.get('img_footnote', 'N/A')
+
             if item.get('type', 'N/A') == 'table':
                 element.metadata = TableMetadata(element.metadata);
-                element.metadata.image_path=item.get('img_path', 'N/A')
+                index = item.get('img_path', 'N/A').find("images")
+                image_path = item.get('img_path', 'N/A')[index:]
+                element.metadata.image_path=image_path
                 element.metadata.image_base64=''
                 element.metadata.image_mime_type='application/octet-stream'
                 element.metadata.text_as_html=item.get('table_body', 'N/A')
+                element.metadata.table_caption = item.get('table_caption', 'N/A')
+                element.metadata.table_footnote = item.get('table_footnote', 'N/A')
 
             element.metadata.last_modified = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
             element.metadata.page_number = item.get('page_idx', 'N/A')
             element.metadata.languages = ["eng"]
             element.metadata.parent_id = parent_id
-            element.metadata.file_directory = "N/A"
-            element.metadata.filename = "N/A"
-            element.metadata.filetype = element.type
+            element.metadata.file_directory = f"{file_name}/{file_name}"
+            element.metadata.filename = file_name
+            element.metadata.filetype = file_extension = os.path.splitext(file_name)[1]
             ################################################
             print(element.to_json())
             elements.append(element.to_json())
@@ -63,4 +72,4 @@ def do(file_name:str) -> None:
     upload_partition_json_file_to_minio(file_name)
 
 if __name__ == "__main__":
-    do('phonix.pdf' )
+    do('321.pdf' )
