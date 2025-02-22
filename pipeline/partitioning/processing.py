@@ -76,5 +76,5 @@ def do(file_name:str) :
 
 
 if __name__ == "__main__":
-    on_processing("phonix.pdf")
+    on_processing("中国核电数字化转型规划及架构设计项目技术文件V0 94.pdf")
     # before_partitioning("test.pdf")

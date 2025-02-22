@@ -19,7 +19,7 @@ async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
 @app.get("/processing/{file_name}")
-async def document_partitioning(file_name: str):
+async def partitioning(file_name: str):
     try:
         before_processing(file_name)#download 目标文件本地目录 从minio
         on_processing(file_name)#文件前置处理
@@ -27,6 +27,15 @@ async def document_partitioning(file_name: str):
         partitioning.do(file_name)#分区处理 处理后的文件上传到minio
     except HTTPException as e:
         raise e
+
+    return {"message": f"Hello {file_name}"}
+
+@app.get("/chunking/{strategy}/{file_name}")
+async def document_partitioning(strategy:str ,file_name: str):
+    # try:
+    #
+    # except HTTPException as e:
+    #     raise e
 
     return {"message": f"Hello {file_name}"}
 
