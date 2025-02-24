@@ -6,7 +6,7 @@
 5. conda activate  fusion-unstructure-processing
 6. pip install -U magic-pdf[full]==1.1.0 --extra-index-url https://wheels.myhloli.com -i https://mirrors.aliyun.com/pypi/simple
 7. 检查magic-pdf版本是否是1.1.0 命令：magic-pdf --version
-8. pip install fastapi==0.115.6 minio==7.2.15 neo4j==5.28.1 -i https://mirrors.aliyun.com/pypi/simple
+8. pip install uvicorn==0.34.0 fastapi==0.115.6 minio==7.2.15 neo4j==5.28.1 -i https://mirrors.aliyun.com/pypi/simple
 9. 安装模型：
     1. pip install modelscope
     2. @Deprecated  wget https://gcore.jsdelivr.net/gh/opendatalab/MinerU@master/scripts/download_models.py -O /home/download_models.py
