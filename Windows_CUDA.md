@@ -2,8 +2,8 @@
 1. 安装conda windows版本 https://docs.anaconda.com/miniconda/install/#quick-command-line-install
 2. 新打开命令行窗口
 3. git clone https://gitee.com/guiding-me/fusion-unstructure-processing.git
-4. conda create -n fusion-unstructure-processing python=3.10
-5. conda activate  fusion-unstructure-processing
+4. conda create -n fusion-partitioning python=3.10
+5. conda activate  fusion-partitioning
 6. pip install -U magic-pdf[full]==1.1.0 --extra-index-url https://wheels.myhloli.com -i https://mirrors.aliyun.com/pypi/simple
 7. 检查magic-pdf版本是否是1.1.0 命令：magic-pdf --version
 8. pip install uvicorn==0.34.0 fastapi==0.115.6 minio==7.2.15 neo4j==5.28.1 -i https://mirrors.aliyun.com/pypi/simple
@@ -14,7 +14,7 @@
     4. python download_models.py
 10. 下载模型之后配置文件存放的路径是 C:\Users\Administrator\magic-pdf.json  模型文件路径是C:\Users\Administrator\.cache\modelscope\
 11. 执行测试
-    1. 进入测试程序目录 {fusion-unstructure-processing(git clone的项目根目录)}/demo
+    1. 进入测试程序目录 {fusion-partitioning(git clone的项目根目录)}/demo
     2. 执行测试程序 python demo.py
 12. 看日志是否正常输出
 13. 如果需要GPU加速执行以下步骤

@@ -5,10 +5,10 @@ from magic_pdf.data.dataset import PymuDocDataset
 from magic_pdf.model.doc_analyze_by_custom_model import doc_analyze
 from magic_pdf.config.enums import SupportedPdfParseMethod
 
+from pipeline.partitioning import partitioning
 from s3 import minio_client
 from s3.minio_client import upload_folder_to_minio
 from utils import directory_utils
-
 
 def before_processing(file_name:str):
     try:
@@ -70,9 +70,10 @@ def after_processing(file_name:str):
 
 
 def do(file_name:str) :
-    local_md_dir,local_images_dir = before_processing(file_name)
-    on_processing(file_name, local_md_dir, local_images_dir)
-    # after_partitioning(file_name, local_md_dir, local_images_dir)
+    before_processing(file_name)
+    on_processing(file_name)
+    after_processing(file_name)
+    partitioning.do(file_name)
 
 
 if __name__ == "__main__":

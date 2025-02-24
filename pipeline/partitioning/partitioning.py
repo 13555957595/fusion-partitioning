@@ -64,7 +64,6 @@ def do(file_name:str) -> None:
             element.metadata.filename = file_name
             element.metadata.filetype = file_extension = os.path.splitext(file_name)[1]
             ################################################
-            print(element.to_json())
             elements.append(element.to_json())
     with open(output_partition_jsonfile, 'w', encoding='utf-8') as json_file:
         json.dump(elements, json_file, ensure_ascii=False, indent=4)
