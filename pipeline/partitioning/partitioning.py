@@ -1,4 +1,3 @@
-# 创建多个 NarrativeTextParams 实例
 import json
 import os
 from datetime import datetime
