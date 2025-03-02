@@ -1,5 +1,5 @@
 
-在阿里云ubuntu22.04 下安装过程
+在阿里云ubuntu22.04 下安装过程（###只能选择A系列GPU显卡###）
 1. 安装conda
     1. wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
     2. chmod +x Miniconda3-latest-Linux-x86_64.sh
