@@ -27,13 +27,18 @@ def do(file_name:str) -> None:
             element_id = element.generate_element_id();
             if text_level == 1:
                 parent_id = element_id
-            element.type = item.get('type', 'N/A')
+                element.type = "title" # 20250302 fixing 如果element的id和parent_id相等，那么说明他是一个title
+            else:
+                element.type = item.get('type', 'N/A')
             element.element_id = element_id
             # 初始化 Metadata 实例并赋值
 
             element.metadata = Metadata()
             if item.get('type', 'N/A') == 'text':
-                element.text = item.get('text', 'N/A')
+                if item.get('text', 'N/A')=="":   # 20250302 fixing 如果当前是一个text类型的element，并且他的text中没有字符，那么忽略该element
+                    continue
+                else:
+                    element.text = item.get('text', 'N/A')
             if item.get('type', 'N/A') == 'image':
                 element.metadata = ImageMetadata(element.metadata);
                 index = item.get('img_path', 'N/A').find("images")
