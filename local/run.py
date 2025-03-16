@@ -6,7 +6,6 @@ from magic_pdf.data.dataset import PymuDocDataset
 from magic_pdf.model.doc_analyze_by_custom_model import doc_analyze
 from magic_pdf.config.enums import SupportedPdfParseMethod
 from pathlib import Path
-from s3.minio_client import upload_folder_to_minio
 from pypinyin import pinyin, Style
 import json
 import os
