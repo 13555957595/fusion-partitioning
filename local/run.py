@@ -214,14 +214,49 @@ def partition2Chunk(workingFolder:str,file_name:str,pinyinName:str)-> None:
         with open(output_partition_jsonfile, 'w', encoding='utf-8') as json_file:
             json.dump(chunks, json_file, ensure_ascii=False, indent=4)
         print(f"文件 {output_partition_jsonfile} 已经生成")
-        chunk2txt(workingFolder,file_name)
 
-        _txt_file = os.path.join(local_md_folder, file_name + ".txt")
-        uploadImageOSS(_txt_file,pinyinName)
+def processPartitionImageAndTable(workingFolder:str,file_name:str,pinyinName:str):
+    # 处理_chunking.json 里面的图片和表格
+    _partition_json_file = os.path.join(workingFolder, "_partition.json")
+    with open(_partition_json_file, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    # 遍历数组中的每个元素
+    for item in data:
+        if item['type'] == 'image':
+            # 检查 image_caption 是否有值
+            if item['metadata']['image_caption']:
+                # 取 image_caption 的第一个元素
+                image_caption = item['metadata']['image_caption'][0]
+                image_path = item['metadata']['image_path']
+                item['text'] = f"{image_caption} {image_path}"
+            else:
+                image_path = item['metadata']['image_path']
+                item['text'] = f"{image_path}"
+
+        elif item['type'] == 'table':
+            # 检查 table_caption 是否有值
+            if item['metadata']['table_caption']:
+                # 取 table_caption 的第一个元素
+                table_caption = item['metadata']['table_caption'][0]
+                text_as_html = item['metadata']['text_as_html']
+                image_path = item['metadata']['image_path']
+                item['text'] = f"{table_caption} {image_path} \n{text_as_html}"
+            else:
+                # 如果 table_caption 为空，保持 text 为 null 或设置为空字符串
+                text_as_html = item['metadata']['text_as_html']
+                image_path = item['metadata']['image_path']
+                item['text'] = f"{image_path} \n{text_as_html}"
+
+    # 将修改后的数据写回到 JSON 文件（如果需要）
+    with open(_partition_json_file, 'w', encoding='utf-8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
+
+    print("image & table 处理完成，结果已保存到 "+_partition_json_file)
 
 
-txt_file_name="_text.txt"
-def chunk2txt(workingFolder:str,file_name:str):
+
+def chunk2txt(workingFolder:str,file_name:str,pinyinName:str):
     #将 chunk 转化成 txt , 便于快速测试使用
     local_md_folder = workingFolder
     _chunking_json_file = os.path.join(local_md_folder, "_chunking.json")
@@ -249,6 +284,8 @@ def chunk2txt(workingFolder:str,file_name:str):
         with open(_txt_file, 'w', encoding='utf-8') as output_file:
             output_file.write(final_text)
         print(f"文件 {_txt_file} 已经生成")
+    _txt_file = os.path.join(workingFolder, file_name + ".txt")
+    uploadImageOSS(_txt_file, pinyinName)
 
 def uploadImageOSS(image_path:str, prefix:str):
     if image_path !="" and image_path !="N/A" :
@@ -290,7 +327,10 @@ def startOne(filename:str):
     workingFolder, imagesFolder, pinyinName = before_processing(filename)
     on_processing(filename,workingFolder,imagesFolder)
     content2PartitionJson(workingFolder,filename,pinyinName)
+    processPartitionImageAndTable(workingFolder, filename, pinyinName)
     partition2Chunk(workingFolder,filename,pinyinName)
+    chunk2txt(workingFolder, filename,pinyinName)
+
 
 
 
