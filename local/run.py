@@ -13,6 +13,7 @@ import sys
 sys.path.append('../')
 from pipeline.partitioning.metadata import ImageMetadata, TableMetadata
 from pipeline.partitioning.element import Element, Metadata
+from pipeline.chunking.composite_element import CompositeElement, generate_chunk_id
 
 
 cache_dir = os.path.join(os.getcwd(), 'cache')  # cache 目录
@@ -46,6 +47,12 @@ def before_processing(file_name:str):
     dest_file = os.path.join(workingFolder, file_name)
     shutil.copy(src_file, dest_file)
     # os.remove(src_file)
+
+
+
+
+
+
     return [workingFolder, imagesFolder]
 
 def on_processing(file_name:str, workingFoler:str, imagesFolder:str):
@@ -90,9 +97,9 @@ def on_processing(file_name:str, workingFoler:str, imagesFolder:str):
     ### dump content list
     pipe_result.dump_content_list(md_writer, "_content_list.json", local_images_dir)
     ### get middle json
-    middle_json_content = pipe_result.get_middle_json()
-    ### dump middle json
-    pipe_result.dump_middle_json(md_writer, "_middle.json")
+    # middle_json_content = pipe_result.get_middle_json()
+    # pipe_result.dump_middle_json(md_writer, "_middle.json")
+
 def after_processing(file_name:str):
     print(file_name)
 
@@ -158,17 +165,92 @@ def content2PartitionJson(workingFolder:str,file_name:str) -> None:
         json.dump(elements, json_file, ensure_ascii=False, indent=4)
 
 
+def partition2Chunk(workingFolder:str,file_name:str)-> None:
+    target_file_path = os.path.join(workingFolder, "_partition.json")
 
-def start(batch_dir:str):
+    chunks = []
+
+    with open(target_file_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+        index = 0
+        previous_chunk = None
+        previous_element_type = None
+        for item in data:
+            current_element_type = item['type']
+            file_name=item['metadata']['filename']
+            page_number=item['metadata']['page_number']
+            if index == 0 or (current_element_type=='title' and previous_element_type!='title'):
+                previous_chunk = CompositeElement()
+                previous_chunk.orig_file=item["metadata"]["file_directory"]
+                previous_chunk.file_name = file_name
+                previous_chunk.page_number = page_number + 1
+                previous_chunk.chunk_id=generate_chunk_id()
+                if item["text"] is not None and item["text"] != "":
+                    previous_chunk.title=item["text"]
+                    previous_chunk.text.append(item["text"])
+                previous_chunk.orig_elements.append(item)
+                chunks.append(previous_chunk.to_json())
+            else:
+                if item["text"] is not None and item["text"] != "":
+                    previous_chunk.text.append(item["text"])
+                previous_chunk.orig_elements.append(item)
+            index = index + 1
+            previous_element_type = current_element_type
+
+        local_md_folder =workingFolder
+        output_partition_jsonfile = os.path.join(local_md_folder, "_chunking.json")
+        with open(output_partition_jsonfile, 'w', encoding='utf-8') as json_file:
+            json.dump(chunks, json_file, ensure_ascii=False, indent=4)
+        print(f"文件 {output_partition_jsonfile} 已经生成")
+        chunk2txt(workingFolder,file_name)
+
+
+
+txt_file_name="_text.txt"
+def chunk2txt(workingFolder:str,file_name:str):
+    #将 chunk 转化成 txt , 便于快速测试使用
+    local_md_folder = workingFolder
+    _chunking_json_file = os.path.join(local_md_folder, "_chunking.json")
+    # 读取 JSON 文件
+    with open(_chunking_json_file, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+        # 初始化结果列表
+        result = []
+
+        # 遍历每个对象
+        for item in data:
+            # 提取 text 数组并过滤掉 None 值
+            texts = [text for text in item['text'] if text is not None]
+            # 拼接 text 数组中的内容，使用句号连接
+            concatenated_text = '。'.join(texts)
+            concatenated_text = concatenated_text + " \n出自 文件:" + item['file_name'] + " 页码:" + str(
+                item['page_number'])
+            # 将拼接后的文本添加到结果列表中
+            result.append(concatenated_text)
+        # 使用 @@ 连接每段文字
+        final_text = '\n@@\n'.join(result)
+
+        # 将结果写入 txt 文件
+        _txt_file = os.path.join(local_md_folder, file_name+".txt")
+        with open(_txt_file, 'w', encoding='utf-8') as output_file:
+            output_file.write(final_text)
+        print(f"文件 {_txt_file} 已经生成")
+def startBatch(batch_dir:str):
     for filename in os.listdir(batch_dir):
         if filename.endswith('.pdf'):
-            workingFolder, imagesFolder = before_processing(filename)
-            on_processing(filename,workingFolder,imagesFolder)
-            after_processing(filename)
-            content2PartitionJson(workingFolder,filename)
+            startOne(filename)
+
+
+def startOne(filename:str):
+    workingFolder, imagesFolder = before_processing(filename)
+    on_processing(filename,workingFolder,imagesFolder)
+    after_processing(filename)
+    content2PartitionJson(workingFolder,filename)
+    partition2Chunk(workingFolder,filename)
 
 
 batch="batch1"
 batch_dir = os.path.join(os.getcwd(), batch)  # batch 目录
 if __name__ == "__main__":
-    start(batch_dir)
+    # startBatch(batch_dir)
+    startOne("低视力学.pdf")
