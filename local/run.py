@@ -148,7 +148,9 @@ def content2PartitionJson(workingFolder:str, file_name:str, pinyinName:str) -> N
                     element.text = item.get('text', 'N/A')
             if item.get('type', 'N/A') == 'image':
                 element.metadata = ImageMetadata(element.metadata);
-                element.metadata.image_path=item.get('img_path', 'N/A')
+                # 上传图片
+                url = uploadImageOSS(item.get('img_path', 'N/A'), pinyinName)
+                element.metadata.image_path = url
                 element.metadata.image_base64=''
                 element.metadata.image_mime_type='image/jpeg'
                 element.metadata.image_caption=item.get('img_caption', 'N/A')
@@ -156,13 +158,13 @@ def content2PartitionJson(workingFolder:str, file_name:str, pinyinName:str) -> N
 
             if item.get('type', 'N/A') == 'table':
                 element.metadata = TableMetadata(element.metadata);
-                element.metadata.image_path=item.get('img_path', 'N/A')
+                url = uploadImageOSS(item.get('img_path', 'N/A'), pinyinName)
+                element.metadata.image_path = url
                 element.metadata.image_base64=''
                 element.metadata.image_mime_type='application/octet-stream'
                 element.metadata.text_as_html=item.get('table_body', 'N/A')
                 element.metadata.table_caption = item.get('table_caption', 'N/A')
                 element.metadata.table_footnote = item.get('table_footnote', 'N/A')
-
             element.metadata.last_modified = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
             element.metadata.page_number = item.get('page_idx', 'N/A')
             element.metadata.languages = ["eng"]
@@ -172,9 +174,7 @@ def content2PartitionJson(workingFolder:str, file_name:str, pinyinName:str) -> N
             element.metadata.filetype = file_extension = os.path.splitext(file_name)[1]
             ################################################
             elements.append(element.to_json())
-            #上传图片
-            url=uploadImageOSS(element.metadata.image_path,pinyinName)
-            element.metadata.image_path=url
+
 
     with open(output_partition_jsonfile, 'w', encoding='utf-8') as json_file:
         json.dump(elements, json_file, ensure_ascii=False, indent=4)
@@ -219,6 +219,8 @@ def partition2Chunk(workingFolder:str,file_name:str,pinyinName:str)-> None:
         print(f"文件 {output_partition_jsonfile} 已经生成")
         chunk2txt(workingFolder,file_name)
 
+        _txt_file = os.path.join(local_md_folder, file_name + ".txt")
+        uploadImageOSS(_txt_file,pinyinName)
 
 
 txt_file_name="_text.txt"
@@ -303,4 +305,4 @@ batch="batch1"
 batch_dir = os.path.join(os.getcwd(), batch)  # batch 目录
 if __name__ == "__main__":
     # startBatch(batch_dir)
-    startOne("低视力学.pdf")
+    startOne("视觉神经生理学.pdf")
