@@ -301,5 +301,5 @@ def startOne(filename:str):
 batch="batch1"
 batch_dir = os.path.join(os.getcwd(), batch)  # batch 目录
 if __name__ == "__main__":
-    # startBatch(batch_dir)
-    startOne("视觉神经生理学.pdf")
+    startBatch(batch_dir)
+    # startOne("视觉神经生理学.pdf")
