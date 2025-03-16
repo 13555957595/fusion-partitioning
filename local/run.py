@@ -22,7 +22,7 @@ from pipeline.partitioning.element import Element, Metadata
 from s3.minio_client import upload_partition_json_file_to_minio
 from utils.directory_utils import get_project_root, get_document_directory
 
-batch_dir = os.path.join(os.getcwd(), 'batch1')  # batch 目录
+
 cache_dir = os.path.join(os.getcwd(), 'cache')  # cache 目录
 os.makedirs(cache_dir, exist_ok=True)
 
@@ -162,9 +162,15 @@ def do(file_name:str) -> None:
 
     upload_partition_json_file_to_minio(file_name)
 
-def start():
+def start(batch_dir:str):
     for filename in os.listdir(batch_dir):
         if filename.endswith('.pdf'):
             workingFolder, imagesFolder = before_processing(filename)
             on_processing(filename,workingFolder,imagesFolder)
             after_processing(filename)
+
+
+batch="batch1"
+batch_dir = os.path.join(os.getcwd(), batch)  # batch 目录
+if __name__ == "__main__":
+    start(batch_dir)
