@@ -111,7 +111,6 @@ def on_processing(file_name:str, workingFoler:str, imagesFolder:str):
     # middle_json_content = pipe_result.get_middle_json()
     # pipe_result.dump_middle_json(md_writer, "_middle.json")
 
-def after_processing(file_name:str):
 
 def content2PartitionJson(workingFolder:str, file_name:str, pinyinName:str) -> None:
     local_md_folder = workingFolder
@@ -290,7 +289,6 @@ def startBatch(batch_dir:str):
 def startOne(filename:str):
     workingFolder, imagesFolder, pinyinName = before_processing(filename)
     on_processing(filename,workingFolder,imagesFolder)
-    after_processing(filename)
     content2PartitionJson(workingFolder,filename,pinyinName)
     partition2Chunk(workingFolder,filename,pinyinName)
 
