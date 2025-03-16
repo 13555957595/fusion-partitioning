@@ -9,6 +9,8 @@ from pypinyin import pinyin, Style
 import json
 import os
 from datetime import datetime
+import sys
+sys.path.append('../')
 from pipeline.partitioning.metadata import ImageMetadata, TableMetadata
 from pipeline.partitioning.element import Element, Metadata
 
