@@ -146,7 +146,7 @@ def content2PartitionJson(workingFolder:str, file_name:str, pinyinName:str) -> N
             if item.get('type', 'N/A') == 'image':
                 element.metadata = ImageMetadata(element.metadata);
                 # 上传图片
-                url = uploadImageOSS(item.get('img_path', 'N/A'), pinyinName)
+                url = uploadImageOSS(item.get('img_path', 'N/A'), pinyinName+"/image")
                 element.metadata.image_path = url
                 element.metadata.image_base64=''
                 element.metadata.image_mime_type='image/jpeg'
@@ -155,7 +155,7 @@ def content2PartitionJson(workingFolder:str, file_name:str, pinyinName:str) -> N
 
             if item.get('type', 'N/A') == 'table':
                 element.metadata = TableMetadata(element.metadata);
-                url = uploadImageOSS(item.get('img_path', 'N/A'), pinyinName)
+                url = uploadImageOSS(item.get('img_path', 'N/A'), pinyinName+"/image")
                 element.metadata.image_path = url
                 element.metadata.image_base64=''
                 element.metadata.image_mime_type='application/octet-stream'
