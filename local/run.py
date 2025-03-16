@@ -22,9 +22,6 @@ from pipeline.partitioning.element import Element, Metadata
 from s3.minio_client import upload_partition_json_file_to_minio
 from utils.directory_utils import get_project_root, get_document_directory
 
-
-
-
 batch_dir = os.path.join(os.getcwd(), 'batch1')  # batch 目录
 cache_dir = os.path.join(os.getcwd(), 'cache')  # cache 目录
 os.makedirs(cache_dir, exist_ok=True)
@@ -56,14 +53,14 @@ def before_processing(file_name:str):
     src_file = os.path.join(batch_dir, file_name)
     dest_file = os.path.join(workingFolder, file_name)
     shutil.copy(src_file, dest_file)
-    os.remove(src_file)
+    # os.remove(src_file)
     return [workingFolder, imagesFolder]
 
 def on_processing(file_name:str, workingFoler:str, imagesFolder:str):
     os.environ['MINERU_TOOLS_CONFIG_JSON'] = './magic-pdf.json'
 
-    local_images_dir = directory_utils.get_image_directory(file_name)
-
+    local_images_dir = imagesFolder
+    local_md_dir=workingFoler
     image_writer, md_writer = FileBasedDataWriter(imagesFolder), FileBasedDataWriter(workingFoler)
     # read bytes
     reader1 = FileBasedDataReader("")
@@ -80,7 +77,7 @@ def on_processing(file_name:str, workingFoler:str, imagesFolder:str):
         infer_result = ds.apply(doc_analyze, ocr=False)
         ## pipeline
         pipe_result = infer_result.pipe_txt_mode(image_writer)
-    ### draw model result on each page
+    ## draw model result on each page
     infer_result.draw_model(os.path.join(local_md_dir, "_model.pdf"))
     ### get model inference result
     model_inference_result = infer_result.get_infer_res()
