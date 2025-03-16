@@ -1,4 +1,5 @@
 import shutil
+import oss2
 import random
 from magic_pdf.data.data_reader_writer import FileBasedDataWriter, FileBasedDataReader
 from magic_pdf.data.dataset import PymuDocDataset
@@ -18,6 +19,16 @@ from pipeline.chunking.composite_element import CompositeElement, generate_chunk
 
 cache_dir = os.path.join(os.getcwd(), 'cache')  # cache 目录
 os.makedirs(cache_dir, exist_ok=True)
+
+# 阿里云 OSS 的 S3 协议端点
+endpoint = 'oss-cn-beijing.aliyuncs.com'  # 替换为你的 OSS 区域端点
+# 阿里云 OSS 的 Access Key ID 和 Access Key Secret
+access_key_id = 'LTAI5tESDcw5pvZCeifgR6iB'
+access_key_secret = 'SL1PGlqpJcOaNrTF9jNHDM1VBF2ZYi'
+bucket_name="tuchong-ai"
+auth = oss2.Auth(access_key_id, access_key_secret)
+bucket = oss2.Bucket(auth, endpoint, bucket_name)
+
 
 def hanzi2pinyin(name:str):
     # 定义汉字
@@ -53,7 +64,7 @@ def before_processing(file_name:str):
 
 
 
-    return [workingFolder, imagesFolder]
+    return [workingFolder, imagesFolder,workingFolderName]
 
 def on_processing(file_name:str, workingFoler:str, imagesFolder:str):
     print(file_name)
@@ -104,7 +115,7 @@ def after_processing(file_name:str):
     print(file_name)
 
 
-def content2PartitionJson(workingFolder:str,file_name:str) -> None:
+def content2PartitionJson(workingFolder:str, file_name:str, pinyinName:str) -> None:
     local_md_folder = workingFolder
     input_content_jsonfile = os.path.join(local_md_folder, "_content_list.json")
     if not os.path.exists(input_content_jsonfile):
@@ -161,11 +172,15 @@ def content2PartitionJson(workingFolder:str,file_name:str) -> None:
             element.metadata.filetype = file_extension = os.path.splitext(file_name)[1]
             ################################################
             elements.append(element.to_json())
+            #上传图片
+            url=uploadImageOSS(element.metadata.image_path,pinyinName)
+            element.metadata.image_path=url
+
     with open(output_partition_jsonfile, 'w', encoding='utf-8') as json_file:
         json.dump(elements, json_file, ensure_ascii=False, indent=4)
 
 
-def partition2Chunk(workingFolder:str,file_name:str)-> None:
+def partition2Chunk(workingFolder:str,file_name:str,pinyinName:str)-> None:
     target_file_path = os.path.join(workingFolder, "_partition.json")
 
     chunks = []
@@ -235,6 +250,36 @@ def chunk2txt(workingFolder:str,file_name:str):
         with open(_txt_file, 'w', encoding='utf-8') as output_file:
             output_file.write(final_text)
         print(f"文件 {_txt_file} 已经生成")
+
+def uploadImageOSS(image_path:str, prefix:str):
+    if image_path !="" and image_path !="N/A" :
+        file_name_with_ext = os.path.basename(image_path)
+        print(file_name_with_ext)  # 输出: image.jpg
+        oss_file = prefix + '/' + file_name_with_ext
+        # 上传文件
+        bucket.put_object_from_file(oss_file, image_path)
+        url = 'https://' + bucket_name + '.' + endpoint + '/' + oss_file
+        print('文件上传成功: ' + url)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def startBatch(batch_dir:str):
     for filename in os.listdir(batch_dir):
         if filename.endswith('.pdf'):
@@ -242,11 +287,16 @@ def startBatch(batch_dir:str):
 
 
 def startOne(filename:str):
-    workingFolder, imagesFolder = before_processing(filename)
+    workingFolder, imagesFolder, pinyinName = before_processing(filename)
     on_processing(filename,workingFolder,imagesFolder)
     after_processing(filename)
-    content2PartitionJson(workingFolder,filename)
-    partition2Chunk(workingFolder,filename)
+    content2PartitionJson(workingFolder,filename,pinyinName)
+    partition2Chunk(workingFolder,filename,pinyinName)
+
+
+
+
+
 
 
 batch="batch1"
