@@ -1,5 +1,3 @@
-from pipeline.partitioning import partitioning
-from pipeline.partitioning.processing import before_processing, on_processing, after_processing
 import os
 import shutil
 import random
@@ -8,19 +6,14 @@ from magic_pdf.data.dataset import PymuDocDataset
 from magic_pdf.model.doc_analyze_by_custom_model import doc_analyze
 from magic_pdf.config.enums import SupportedPdfParseMethod
 from pathlib import Path
-from pipeline.partitioning import partitioning
-from s3 import minio_client
 from s3.minio_client import upload_folder_to_minio
-from utils import directory_utils
 from pypinyin import pinyin, Style
 import json
 import os
 from datetime import datetime
-
 from pipeline.partitioning.metadata import ImageMetadata, TableMetadata
 from pipeline.partitioning.element import Element, Metadata
 from s3.minio_client import upload_partition_json_file_to_minio
-from utils.directory_utils import get_project_root, get_document_directory
 
 
 cache_dir = os.path.join(os.getcwd(), 'cache')  # cache 目录
@@ -100,8 +93,8 @@ def on_processing(file_name:str, workingFoler:str, imagesFolder:str):
 def after_processing(file_name:str):
     upload_folder_to_minio(file_name)
 
-def do(file_name:str) -> None:
-    local_md_folder = get_document_directory(file_name)
+def content2PartitionJson(workingFolder:str) -> None:
+    local_md_folder = workingFolder
     input_content_jsonfile = os.path.join(local_md_folder, "_content_list.json")
     if not os.path.exists(input_content_jsonfile):
         print(f"文件 {input_content_jsonfile} 不存在")
@@ -168,6 +161,7 @@ def start(batch_dir:str):
             workingFolder, imagesFolder = before_processing(filename)
             on_processing(filename,workingFolder,imagesFolder)
             after_processing(filename)
+            content2PartitionJson(workingFolder)
 
 
 batch="batch1"
