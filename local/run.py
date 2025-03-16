@@ -112,8 +112,6 @@ def on_processing(file_name:str, workingFoler:str, imagesFolder:str):
     # pipe_result.dump_middle_json(md_writer, "_middle.json")
 
 def after_processing(file_name:str):
-    print(file_name)
-
 
 def content2PartitionJson(workingFolder:str, file_name:str, pinyinName:str) -> None:
     local_md_folder = workingFolder
@@ -262,6 +260,7 @@ def uploadImageOSS(image_path:str, prefix:str):
         bucket.put_object_from_file(oss_file, image_path)
         url = 'https://' + bucket_name + '.' + endpoint + '/' + oss_file
         print('文件上传成功: ' + url)
+        return url
 
 
 
