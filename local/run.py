@@ -1,4 +1,3 @@
-import os
 import shutil
 import random
 from magic_pdf.data.data_reader_writer import FileBasedDataWriter, FileBasedDataReader
@@ -12,7 +11,6 @@ import os
 from datetime import datetime
 from pipeline.partitioning.metadata import ImageMetadata, TableMetadata
 from pipeline.partitioning.element import Element, Metadata
-from s3.minio_client import upload_partition_json_file_to_minio
 
 
 cache_dir = os.path.join(os.getcwd(), 'cache')  # cache 目录
@@ -49,8 +47,12 @@ def before_processing(file_name:str):
     return [workingFolder, imagesFolder]
 
 def on_processing(file_name:str, workingFoler:str, imagesFolder:str):
-    os.environ['MINERU_TOOLS_CONFIG_JSON'] = './magic-pdf.json'
+    print(file_name)
+    print(workingFoler)
+    print(imagesFolder)
 
+
+    os.environ['MINERU_TOOLS_CONFIG_JSON'] = './magic-pdf.json'
     local_images_dir = imagesFolder
     local_md_dir=workingFoler
     image_writer, md_writer = FileBasedDataWriter(imagesFolder), FileBasedDataWriter(workingFoler)
@@ -90,9 +92,10 @@ def on_processing(file_name:str, workingFoler:str, imagesFolder:str):
     ### dump middle json
     pipe_result.dump_middle_json(md_writer, "_middle.json")
 def after_processing(file_name:str):
-    upload_folder_to_minio(file_name)
+    print(file_name)
 
-def content2PartitionJson(workingFolder:str) -> None:
+
+def content2PartitionJson(workingFolder:str,file_name:str) -> None:
     local_md_folder = workingFolder
     input_content_jsonfile = os.path.join(local_md_folder, "_content_list.json")
     if not os.path.exists(input_content_jsonfile):
@@ -152,7 +155,7 @@ def content2PartitionJson(workingFolder:str) -> None:
     with open(output_partition_jsonfile, 'w', encoding='utf-8') as json_file:
         json.dump(elements, json_file, ensure_ascii=False, indent=4)
 
-    upload_partition_json_file_to_minio(file_name)
+
 
 def start(batch_dir:str):
     for filename in os.listdir(batch_dir):
@@ -160,7 +163,7 @@ def start(batch_dir:str):
             workingFolder, imagesFolder = before_processing(filename)
             on_processing(filename,workingFolder,imagesFolder)
             after_processing(filename)
-            content2PartitionJson(workingFolder)
+            content2PartitionJson(workingFolder,filename)
 
 
 batch="batch1"
