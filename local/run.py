@@ -57,7 +57,7 @@ def before_processing(file_name:str):
     src_file = os.path.join(batch_dir, file_name)
     dest_file = os.path.join(workingFolder, file_name)
     shutil.copy(src_file, dest_file)
-    # os.remove(src_file)
+    os.remove(src_file)
 
 
 
@@ -290,12 +290,12 @@ def chunk2txt(workingFolder:str,file_name:str,pinyinName:str):
 def uploadImageOSS(image_path:str, prefix:str):
     if image_path !="" and image_path !="N/A" :
         file_name_with_ext = os.path.basename(image_path)
-        print(file_name_with_ext)  # 输出: image.jpg
+        # print(file_name_with_ext)  # 输出: image.jpg
         oss_file = prefix + '/' + file_name_with_ext
         # 上传文件
         bucket.put_object_from_file(oss_file, image_path)
         url = 'https://' + bucket_name + '.' + endpoint + '/' + oss_file
-        print('文件上传成功: ' + url)
+        # print('文件上传成功: ' + url)
         return url
 
 
@@ -338,7 +338,7 @@ def startOne(filename:str):
 
 
 
-batch="batch1"
+batch="batch2"
 batch_dir = os.path.join(os.getcwd(), batch)  # batch 目录
 if __name__ == "__main__":
     startBatch(batch_dir)
